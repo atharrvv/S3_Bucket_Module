@@ -1,6 +1,6 @@
 variable "bucket_name" {
   description = "Unique name for the S3 bucket"
-  type        = string
+  type = string
 }
 
 variable "tags" {
@@ -47,3 +47,23 @@ variable "enable_lifecycle" {
   type        = bool
   default     = true
 }
+
+variable "enable_static_website" {
+  description = "Enable static website hosting on the bucket"
+  type        = bool
+  default     = false
+}
+
+variable "website_index_document" {
+  description = "Index document for static website hosting"
+  type        = string
+  default     = "index.html"
+}
+
+variable "website_error_document" {
+  description = "Error document for static website hosting"
+  type        = string
+  default     = "error.html"
+}
+
+

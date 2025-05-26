@@ -8,19 +8,23 @@ module "my_bucket" {
 
   bucket_policy_statements = [
     {
-      sid       = "AllowReadOnlyAccess"
+      sid       = "PublicReadGetObject"
       effect    = "Allow"
       actions   = ["s3:GetObject"]
-      resources = ["arn:aws:s3:::eathervvvvvv/*"]  # ✅ Must match the bucket_name above
+
+      resources = ["arn:aws:s3:::eathervvvvvv/*"]
       principals = [
         {
           type        = "AWS"
-          identifiers = ["arn:aws:iam::026090548018:user/dhanush"]  # ✅ Replace with your actual IAM role ARN
+          identifiers = ["arn:aws:iam::026090548018:user/dhanush"]  
         }
       ]
     }
   ]
 
  enable_lifecycle = true 
+ enable_static_website  = true
+ website_index_document = "home.html"
+ website_error_document = "404.html"
 
 }

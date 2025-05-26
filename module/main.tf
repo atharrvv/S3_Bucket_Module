@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "this" {
-  bucket = var.bucket_name
+  bucket = var.bucket_name 
   tags   = var.tags
 }
 
@@ -66,7 +66,11 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
     status = "Enabled"
 
 
-    
+    filter {
+
+	prefix = ""
+
+	}
      
    
 
@@ -81,3 +85,18 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
     }
   }
 }
+
+resource "aws_s3_bucket_website_configuration" "this" {
+  count  = var.enable_static_website ? 1 : 0
+  bucket = aws_s3_bucket.this.id
+
+  index_document {
+    suffix = var.website_index_document
+  }
+
+  error_document {
+    key = var.website_error_document
+  }
+}
+
+
