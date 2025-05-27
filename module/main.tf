@@ -11,7 +11,7 @@ resource "aws_s3_bucket_versioning" "this" {
   }
 }
 
-# Server-side encryption (SSE-S3 by default)
+# Server-side encryption 
 resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   count = var.encrypt ? 1 : 0
 
@@ -23,7 +23,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   }
 }
 
-# Block public access (recommended)
+# Block public access 
 resource "aws_s3_bucket_public_access_block" "this" {
   count = var.block_public_access ? 1 : 0
 
@@ -35,7 +35,7 @@ resource "aws_s3_bucket_public_access_block" "this" {
   restrict_public_buckets = true
 }
 
-
+# Bucket policies
 resource "aws_s3_bucket_policy" "this" {
   count  = length(var.bucket_policy_statements) > 0 ? 1 : 0
   bucket = aws_s3_bucket.this.id
@@ -57,6 +57,7 @@ resource "aws_s3_bucket_policy" "this" {
   })
 }
 
+# Transitioning to other storage classes
 resource "aws_s3_bucket_lifecycle_configuration" "this" {
   count  = var.enable_lifecycle ? 1 : 0
   bucket = aws_s3_bucket.this.id
@@ -67,8 +68,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
     status = "Enabled"
 
     filter {
-      
-	and {
+         and {							
       prefix = ""
       object_size_greater_than = 1024
       object_size_less_than    = 104857600
@@ -91,8 +91,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
     status = "Enabled"
 
     filter {
-	
-	and {
+        and {
       prefix = ""
 	    }
 	}
@@ -112,9 +111,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
     status = "Enabled"
 
     filter {
-
-	and {
-
+	 and {
       prefix = ""
 	    }
 	}
