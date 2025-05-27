@@ -61,27 +61,71 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
   count  = var.enable_lifecycle ? 1 : 0
   bucket = aws_s3_bucket.this.id
 
+  # Rule 1: Your original rule for logs/ to GLACIER
   rule {
-    id     = "transition-to-glacier"
+    id     = "transition-logs-to-glacier"
     status = "Enabled"
 
-
     filter {
-
-	prefix = ""
-
+      
+	and {
+      prefix = ""
+      object_size_greater_than = 1024
+      object_size_less_than    = 104857600
+ 	   }
 	}
-     
-   
-
 
     transition {
       days          = 30
-      storage_class = "GLACIER"
+      storage_class = "GLACIER" // S3 Glacier Flexible Retrieval
     }
 
     expiration {
       days = 365
+    }
+  }
+
+  # Rule 2: Transition very old backups/ to DEEP_ARCHIVE
+  rule {
+    id     = "transition-backups-to-deep-archive"
+    status = "Enabled"
+
+    filter {
+	
+	and {
+      prefix = ""
+	    }
+	}
+
+    transition {
+      days          = 180
+      storage_class = "DEEP_ARCHIVE"
+    }
+
+    expiration {
+      days = 1095 # Expire after 3 years
+    }
+  }
+
+  rule {
+    id     = "transition-temp-to-standard-ia"
+    status = "Enabled"
+
+    filter {
+
+	and {
+
+      prefix = ""
+	    }
+	}
+
+    transition {
+      days          = 31 # Note: STANDARD_IA has a 30-day minimum charge
+      storage_class = "STANDARD_IA"
+    }
+
+    expiration {
+      days = 45
     }
   }
 }
