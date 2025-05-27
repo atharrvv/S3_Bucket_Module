@@ -69,7 +69,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
 
     filter {
          and {							
-      prefix = ""
+      prefix = "logs/"
       object_size_greater_than = 1024
       object_size_less_than    = 104857600
  	   }
@@ -92,7 +92,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
 
     filter {
         and {
-      prefix = ""
+      prefix = "backups/"
 	    }
 	}
 
@@ -113,7 +113,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
 
     filter {
 	 and {
-      prefix = ""
+      prefix = "temporary/"
 	    }
 	}
 
@@ -134,7 +134,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
 
     filter {
       and {
-      prefix = ""
+      prefix = "smart-archive/"
       }
     }
     # Transition objects into Intelligent-Tiering after 0 days (immediately) or some other period
