@@ -106,6 +106,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
     }
   }
 
+  # Rule 3: Transition temporary/ to STANDARD_IA and expire quickly
   rule {
     id     = "transition-temp-to-standard-ia"
     status = "Enabled"
@@ -125,7 +126,29 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
       days = 45
     }
   }
+
+  # Rule 4: Using Intelligent-Tiering for 'smart-archive/' prefix
+  rule {
+    id     = "use-intelligent-tiering-for-smart-archive"
+    status = "Enabled"
+
+    filter {
+      and {
+      prefix = ""
+      }
+    }
+    # Transition objects into Intelligent-Tiering after 0 days (immediately) or some other period
+    transition {
+      days          = 60 # Or 30, 60 etc.
+      storage_class = "INTELLIGENT_TIERING"
+    }
+    # Expiration can still be set
+    expiration {
+      days = 1825 # Expire after 5 years
+    }
+  }
 }
+
 
 resource "aws_s3_bucket_website_configuration" "this" {
   count  = var.enable_static_website ? 1 : 0
