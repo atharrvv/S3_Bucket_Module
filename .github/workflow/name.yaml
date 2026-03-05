@@ -1,0 +1,23 @@
+name: Test GitHub Actions Pipeline
+
+on:
+  push:
+    branches:
+      - testing
+
+jobs:
+  test-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Print Message
+        run: echo "GitHub Actions pipeline is working!"
+
+      - name: Show Files in Repository
+        run: ls -la
+
+      - name: Show Current Date
+        run: date
